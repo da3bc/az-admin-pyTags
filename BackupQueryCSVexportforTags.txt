@@ -1,0 +1,12 @@
+Resources
+| where type =~ 'microsoft.compute/virtualmachines'
+| project resourceGroup,subscriptionId, Id = tolower(id), Name = name
+| join kind=leftouter(
+recoveryservicesresources
+	| where type == "microsoft.recoveryservices/vaults/backupfabrics/protectioncontainers/protecteditems"
+    | extend vaultName = case(type =~ 'microsoft.dataprotection/backupVaults/backupInstances',split(split(id, '/Microsoft.DataProtection/backupVaults/')[1],'/')[0],type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',split(split(id, '/Microsoft.RecoveryServices/vaults/')[1],'/')[0],'--')
+    | extend protectionState = properties.currentProtectionState
+    | extend policyName = case(type =~ 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems',properties.policyName, type =~ 'microsoft.dataprotection/backupVaults/backupInstances', properties.policyInfo.name, '--')
+	| project resID = tolower(tostring(properties.dataSourceSetInfo.resourceID)), protectionState, vaultName, policyName)
+	on $left.Id == $right.resID
+| project-away resID, resourceGroup

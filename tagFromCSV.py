@@ -2,6 +2,7 @@
 Python3 Script to Tag Exsiting Virtual Machines in Azure
 
 Authentication via Azure CLI Credentials
+Scope based on Csv Input (KQL Scope)
 
 CSV List Order "SUBSCRIPTIONID","ID","NAME","PROTECTIONSTATE","VAULTNAME","POLICYNAME"
 """
@@ -21,7 +22,7 @@ with open ('UpdateTags.csv', 'r') as csv_file:
         if (row[3] == "ProtectionConfigured"):  
             tags = {
                 "VaultName": row[4],
-                "Policy": row[5]
+                "PolicyName": row[5]
             }
            
             subscriptionId = f"{row[0]}"
@@ -39,8 +40,8 @@ with open ('UpdateTags.csv', 'r') as csv_file:
             print(f"Tags {tagPatchResource.properties.tags} were added to existing tags on resource with ID: {row[1]}")
         else:
             tags = {
-                "Vault": "No Vault",
-                "Policy": "No Backup"
+                "VaultName": "No Vault",
+                "PolicyName": "No Backup"
             }            
             subscriptionId = f"{row[0]}"
             
