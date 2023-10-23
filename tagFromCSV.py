@@ -21,8 +21,8 @@ with open ('UpdateTags.csv', 'r') as csv_file:
     for row in csvReader:
         if (row[3] == "ProtectionConfigured"):  
             tags = {
-                "VaultName": row[4],
-                "PolicyName": row[5]
+                "RecoveryServicesVault": row[4],
+                "BackupPolicy": row[5]
             }
            
             subscriptionId = f"{row[0]}"
@@ -40,8 +40,8 @@ with open ('UpdateTags.csv', 'r') as csv_file:
             print(f"Tags {tagPatchResource.properties.tags} were added to existing tags on resource with ID: {row[1]}")
         else:
             tags = {
-                "VaultName": "No Vault",
-                "PolicyName": "No Backup"
+                "RecoveryServicesVault": "No Vault",
+                "BackupPolicy": "No Backup"
             }            
             subscriptionId = f"{row[0]}"
             
