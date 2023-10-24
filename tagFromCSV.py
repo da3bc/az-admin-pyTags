@@ -15,7 +15,7 @@ from azure.mgmt.resource.resources.models import TagsPatchResource
 
 credential = AzureCliCredential()
 
-with open ('UpdateTags.csv', 'r') as csv_file:
+with open ('VM_Backuppolicies_central-it-shared-001_23102023.csv', 'r') as csv_file:
     csvReader = csv.reader(csv_file, delimiter=',' )
     next(csvReader)
     for row in csvReader:
@@ -38,6 +38,11 @@ with open ('UpdateTags.csv', 'r') as csv_file:
             resClient.tags.begin_update_at_scope(f"{resource.id}", tagPatchResource)
 
             print(f"Tags {tagPatchResource.properties.tags} were added to existing tags on resource with ID: {row[1]}")
+        
+        else:
+            print(f"No Tags were added to existing tags on resource with ID: {resource.id} Reason: Protection Status = {row[3]}")
+
+""" Change else loop to this one if you want to Add Different Tags to VMs without a configured Backup
         else:
             tags = {
                 "RecoveryServicesVault": "No Vault",
@@ -55,6 +60,6 @@ with open ('UpdateTags.csv', 'r') as csv_file:
             resClient.tags.begin_update_at_scope(f"{resource.id}", tagPatchResource)
 
             print(f"Tags {tagPatchResource.properties.tags} were added to existing tags on resource with ID: {resource.id}")
-
+"""
 
 print("________________________________________________DONE__________________________________________________")
